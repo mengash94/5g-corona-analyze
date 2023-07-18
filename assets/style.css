@@ -1,0 +1,138 @@
+/* body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    color: whitesmoke;
+    margin: 0;
+    padding: 0;
+    background-color: #0e0101e4;
+} */
+
+.container {
+    width: 80%;
+    margin: auto;
+    overflow: hidden;
+}
+
+header {
+    background: #818181;
+    color: white;
+    padding-top: 30px;
+    min-height: 70px;
+    border-bottom: #e8491d 3px solid;
+}
+
+header a {
+    color: black;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-size: 16px;
+}
+
+header li {
+    float: left;
+    display: inline;
+    padding: 0 20px 0 20px;
+}
+
+header #branding {
+    float: left;
+}
+
+header #branding h1 {
+    margin: 0;
+}
+
+header nav {
+    float: right;
+    margin-top: 10px;
+}
+
+header .highlight, header .current a {
+    color: #e8491d;
+    font-weight: bold;
+}
+
+header a:hover {
+    color: #0f77ff;
+    font-weight: bold;
+}
+body {
+    background-image: url("image/backgroud6A.jpg");
+    background-size: cover;
+    background-position: center;
+  }
+  .page-container {
+    display: flex;
+    justify-content: center;
+
+}
+
+.content-container {
+    max-width: 1200px;
+    margin: 0 20px;
+    height:500;
+    width :500;
+}
+.site-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 auto;
+    max-width: 1200px;
+    padding: 20px;
+    height:500;
+    width :500;
+    
+}
+Style the nested tabs as a side navigation bar
+#nested-tabs {
+    width: 200px;
+    padding-top: 60px;
+    background-color: #111;
+    overflow-x: hidden;
+}
+
+#nested-tabs .tab {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #818181;
+    display: block;
+}
+
+#nested-tabs .tab:hover {
+    color: #0e0202;
+}
+
+/* Style the nested tabs content */
+#nested-tabs-content {
+    padding: 20px;
+}
+
+/* Style the container holding the tabs and content */
+#tabs-and-content {
+    display: flex;
+    flex-direction: row;
+    background-color: gainsboro;
+}
+
+.table-container {
+    max-width: 1200px;
+    margin: 0 20px;
+    /* background-color: #0f77ff; */
+}
+h3{
+    color: black;
+}
+h2{
+    color: black;
+}
+h1{
+    color: black;
+}
+p{
+    color: black;
+}
+.table-container .dash-spreadsheet-container {
+    background-color: transparent;
+}
