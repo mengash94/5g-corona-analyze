@@ -27,7 +27,7 @@ from pages.SentimentAnalysis import layout as sentiment_analysis_layout
 import dash_bootstrap_components as dbc
 
 
-#,external_stylesheets=[dbc.themes.CERULEAN]
+# ,external_stylesheets=[dbc.themes.CERULEAN]
 
 app = dash.Dash(__name__, suppress_callback_exceptions=True)
 # app = dash.Dash(__name__, )
@@ -37,7 +37,7 @@ cache = Cache(app.server, config={
     'CACHE_TYPE': 'filesystem',
     'CACHE_DIR': 'cache-directory'
 })
-cache.clear()
+# cache.clear()
 ########################      AutoCorrelation  ###############
 
 pivot_df = pd.read_csv('pivot_df.csv')
