@@ -27,7 +27,7 @@ from pages.SentimentAnalysis import layout as sentiment_analysis_layout
 import dash_bootstrap_components as dbc
 
 
-#,external_stylesheets=[dbc.themes.CERULEAN]
+# ,external_stylesheets=[dbc.themes.CERULEAN]
 
 app = dash.Dash(__name__, suppress_callback_exceptions=True)
 # app = dash.Dash(__name__, )
