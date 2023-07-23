@@ -17,7 +17,7 @@ from pages.AutoCorrelation import AutoCorrelation
 from pages.SentimentAnalysis import SentimentAnalysis
 from pages.ARIMA import ARIMA
 from pages.BERT import BERT
-from pages.AboutWriter import AboutWriter
+from pages.AboutResearchers import AboutWriter
 from pages.ContactUs import ContactUs
 from pages.Projectdetails import Projectdetails
 

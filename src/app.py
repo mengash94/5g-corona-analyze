@@ -16,14 +16,14 @@ from flask_caching import Cache
 from pages.DescriptiveStatistics import DescriptiveStatistics
 from pages.CrossCorrelation import CrossCorrelation
 from pages.AutoCorrelation import AutoCorrelation
-from pages.SentimentAnalysis import avg_sentiment_scores,sentiment_analysis_layout
+from pages.SentimentAnalysis import avg_sentiment_scores
 from dash_dangerously_set_inner_html import DangerouslySetInnerHTML
 from pages.ARIMA import ARIMA
 from pages.BERT import BERT
-from pages.AboutWriter import AboutWriter
+from pages.AboutResearchers import AboutResearchers
 from pages.ContactUs import ContactUs
 from pages.Projectdetails import Projectdetails
-from pages.SentimentAnalysis import layout as sentiment_analysis_layout
+from pages.SentimentAnalysis import layout 
 import dash_bootstrap_components as dbc
 
 
@@ -37,7 +37,7 @@ cache = Cache(app.server, config={
     'CACHE_TYPE': 'filesystem',
     'CACHE_DIR': 'cache-directory'
 })
-# cache.clear()
+cache.clear()
 ########################      AutoCorrelation  ###############
 
 pivot_df = pd.read_csv('pivot_df.csv')
@@ -51,7 +51,7 @@ app.layout = html.Div([
     dcc.Location(id='url', refresh=False),
     dcc.Tabs(id="tabs", value='/', children=[
         dcc.Tab(label='Home', value='/'),
-        dcc.Tab(label='About the Writer', value='/about-writer'),
+        dcc.Tab(label='About the Researchers', value='/AboutResearchers'),
         dcc.Tab(label='Project Details', value='/project-details'),
         dcc.Tab(label='Contact Us', value='/contact-us'),
     ]),
@@ -77,8 +77,8 @@ def render_content(pathname):
             html.Div(id='nested-tabs-content')
             ])
         ])
-    elif pathname == '/about-writer':
-        return AboutWriter()
+    elif pathname == '/AboutResearchers':
+        return AboutResearchers()
     elif pathname == '/project-details':
         return Projectdetails()
     elif pathname == '/contact-us':
@@ -95,7 +95,7 @@ def render_nested_content(tab_value):
     elif tab_value == 'nested-tab-3':
         return AutoCorrelation(pivot_df)
     elif tab_value == 'nested-tab-4':
-        return sentiment_analysis_layout
+        return layout
     elif tab_value == 'nested-tab-5':
         return ARIMA(languages)
     elif tab_value == 'nested-tab-6':

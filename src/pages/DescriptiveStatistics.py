@@ -15,12 +15,14 @@ url_counts = pd.read_csv('url_counts.csv')
 tweet_distribution = pd.read_csv('tweet_distribution.csv')
 tweet_counts_no_en = pd.read_csv('tweet_counts_no_en.csv')
 def DescriptiveStatistics():
-    desc_table = dash_table.DataTable(
-        data=df_description.reset_index().to_dict('records'),
-        columns=[{'name': i, 'id': i} for i in df_description.reset_index().columns],
-        style_cell={'textAlign': 'left'},
-        style_table={'height': '300px', 'width': '500px'},
-    )
+    desc_table = html.Div([
+        dash_table.DataTable(
+            data=df_description.reset_index().to_dict('records'),
+            columns=[{'name': i, 'id': i} for i in df_description.reset_index().columns],
+            style_cell={'textAlign': 'center'},
+            style_table={'height': '300px', 'width': '500px'},
+        )
+    ], style={'display': 'flex', 'justify-content': 'center'})
 
     # Create a bar chart of the tweet counts by language
     tweet_counts_fig = px.bar(tweet_counts, x='lang', y='count', title='Tweet Counts by Language')
