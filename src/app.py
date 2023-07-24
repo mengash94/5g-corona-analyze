@@ -25,7 +25,8 @@ from pages.ContactUs import ContactUs
 from pages.Projectdetails import Projectdetails
 from pages.SentimentAnalysis import layout 
 import dash_bootstrap_components as dbc
-
+import pickle
+import os
 
 # ,external_stylesheets=[dbc.themes.CERULEAN]
 
@@ -127,87 +128,146 @@ def update_graph(selected_language):
     return figure
 
 #################################### ARIMA #################################
-def fit_auto_arima(series, forecast_periods=10):
-    try:
-        model = pm.auto_arima(series, suppress_warnings=True, seasonal=False, stepwise=True)
-        forecast, conf_int = model.predict(n_periods=forecast_periods, return_conf_int=True)
-        return model, forecast, conf_int
-    except Exception as e:
-        print(f"Failed to fit model: {e}")
-        return None, None, None
+# def fit_auto_arima(series, forecast_periods=10):
+#     try:
+#         model = pm.auto_arima(series, suppress_warnings=True, seasonal=False, stepwise=True)
+#         forecast, conf_int = model.predict(n_periods=forecast_periods, return_conf_int=True)
+#         return model, forecast, conf_int
+#     except Exception as e:
+#         print(f"Failed to fit model: {e}")
+#         return None, None, None
+
+# @app.callback(
+#     Output('arima-graph', 'figure'),
+#     [Input('arima-language-dropdown', 'value')]  # changed id
+# )
+
+# def update_arima_graph(selected_lang_arima):
+
+#     lang_data = tweets_per_day_by_lang[tweets_per_day_by_lang['lang'] == selected_lang_arima]
+#     lang_data.set_index('created_at', inplace=True)
+#     lang_series = lang_data['id']
+
+
+#     # We'll use 80% of our data for training, 20% for testing
+#     split_point = int(len(lang_series) * 0.8)
+#     train, test = lang_series[:split_point], lang_series[split_point:]
+
+#     model, _, _ = fit_auto_arima(train, forecast_periods=len(test))
+
+#     # Generate predictions for the dates in the test set
+#     forecast = model.predict(n_periods=len(test))
+#     # Create the plotly figure
+#     fig = go.Figure()
+#     fig.add_trace(go.Scatter(x=test.index, y=test, mode='lines', name='Actual'))
+#     fig.add_trace(go.Scatter(x=test.index, y=forecast, mode='lines', name='Predicted'))
+#     fig.update_layout(title=f"ARIMA Model Forecast vs Actuals for Language: {selected_lang_arima}",
+#                     xaxis_title='Date',
+#                     yaxis_title='Tweet Count',
+#                     )
+#     fig.update_layout(
+#         autosize=False,
+#         width=700,
+#         height=300
+#     )
+
+
+#     return fig
+
+# @app.callback(
+#     Output('arima-summary-card', 'children'),
+#     [Input('arima-language-dropdown', 'value')]
+# )
+
+# def update_arima_summary(selected_lang_arima):
+#     lang_data = tweets_per_day_by_lang[tweets_per_day_by_lang['lang'] == selected_lang_arima]
+#     lang_data.set_index('created_at', inplace=True)
+#     lang_series = lang_data['id']
+
+#     # We'll use 80% of our data for training, 20% for testing
+#     split_point = int(len(lang_series) * 0.8)
+#     train, test = lang_series[:split_point], lang_series[split_point:]
+
+#     model, _, _ = fit_auto_arima(train, forecast_periods=len(test))
+
+#     # Generate predictions for the dates in the test set
+#     forecast = model.predict(n_periods=len(test))
+    
+
+    
+#     summary = str(model.summary())
+
+#     # Replace newlines with line breaks for HTML
+#     summary_html = summary.replace('\n', '<br>')
+
+#     # Wrap the summary in a preformatted text tag to preserve spaces
+#     summary_html = f'<pre style="white-space: pre-wrap;">{summary_html}</pre>'
+#     card = dbc.Card([
+#         dbc.CardHeader("ARIMA Model Summary"),
+#         dbc.CardBody([
+#             DangerouslySetInnerHTML(summary_html)
+#         ])
+#     ])
+#     return card
 
 @app.callback(
     Output('arima-graph', 'figure'),
-    [Input('arima-language-dropdown', 'value')]  # changed id
+    [Input('arima-language-dropdown', 'value')]
 )
-
 def update_arima_graph(selected_lang_arima):
+    # Load the precomputed model and results
+    if os.path.exists(f'{selected_lang_arima}_model.pkl'):
+        with open(f'{selected_lang_arima}_model.pkl', 'rb') as f:
+            model, forecast, conf_int, test_index, test = pickle.load(f)
 
-    lang_data = tweets_per_day_by_lang[tweets_per_day_by_lang['lang'] == selected_lang_arima]
-    lang_data.set_index('created_at', inplace=True)
-    lang_series = lang_data['id']
-
-
-    # We'll use 80% of our data for training, 20% for testing
-    split_point = int(len(lang_series) * 0.8)
-    train, test = lang_series[:split_point], lang_series[split_point:]
-
-    model, _, _ = fit_auto_arima(train, forecast_periods=len(test))
-
-    # Generate predictions for the dates in the test set
-    forecast = model.predict(n_periods=len(test))
-    # Create the plotly figure
-    fig = go.Figure()
-    fig.add_trace(go.Scatter(x=test.index, y=test, mode='lines', name='Actual'))
-    fig.add_trace(go.Scatter(x=test.index, y=forecast, mode='lines', name='Predicted'))
-    fig.update_layout(title=f"ARIMA Model Forecast vs Actuals for Language: {selected_lang_arima}",
-                    xaxis_title='Date',
-                    yaxis_title='Tweet Count',
-                    )
-    fig.update_layout(
-        autosize=False,
-        width=700,
-        height=300
-    )
-
-
-    return fig
+        # Create the plotly figure
+        fig = go.Figure()
+        fig.add_trace(go.Scatter(x=test_index, y=test, mode='lines', name='Actual'))
+        fig.add_trace(go.Scatter(x=test_index, y=forecast, mode='lines', name='Predicted'))
+        fig.update_layout(title=f"ARIMA Model Forecast vs Actuals for Language: {selected_lang_arima}",
+                        xaxis_title='Date',
+                        yaxis_title='Tweet Count',
+                        )
+        fig.update_layout(
+            autosize=False,
+            width=700,
+            height=300
+        )
+        return fig
+    else:
+        return go.Figure()
 
 @app.callback(
     Output('arima-summary-card', 'children'),
     [Input('arima-language-dropdown', 'value')]
 )
-
 def update_arima_summary(selected_lang_arima):
-    lang_data = tweets_per_day_by_lang[tweets_per_day_by_lang['lang'] == selected_lang_arima]
-    lang_data.set_index('created_at', inplace=True)
-    lang_series = lang_data['id']
+    # Load the precomputed model and results
+    if os.path.exists(f'{selected_lang_arima}_model.pkl'):
+        with open(f'{selected_lang_arima}_model.pkl', 'rb') as f:
+            model, forecast, conf_int, test_index, test = pickle.load(f)
 
-    # We'll use 80% of our data for training, 20% for testing
-    split_point = int(len(lang_series) * 0.8)
-    train, test = lang_series[:split_point], lang_series[split_point:]
+        summary = str(model.summary())
 
-    model, _, _ = fit_auto_arima(train, forecast_periods=len(test))
+        # Replace newlines with line breaks for HTML
+        summary_html = summary.replace('\n', '<br>')
 
-    # Generate predictions for the dates in the test set
-    forecast = model.predict(n_periods=len(test))
-    
-
-    
-    summary = str(model.summary())
-
-    # Replace newlines with line breaks for HTML
-    summary_html = summary.replace('\n', '<br>')
-
-    # Wrap the summary in a preformatted text tag to preserve spaces
-    summary_html = f'<pre style="white-space: pre-wrap;">{summary_html}</pre>'
-    card = dbc.Card([
-        dbc.CardHeader("ARIMA Model Summary"),
-        dbc.CardBody([
-            DangerouslySetInnerHTML(summary_html)
+        # Wrap the summary in a preformatted text tag to preserve spaces
+        summary_html = f'<pre style="white-space: pre-wrap;">{summary_html}</pre>'
+        card = dbc.Card([
+            dbc.CardHeader("ARIMA Model Summary"),
+            dbc.CardBody([
+                DangerouslySetInnerHTML(summary_html)
+            ])
         ])
-    ])
-    return card
+        return card
+    else:
+        return dbc.Card([
+            dbc.CardHeader("ARIMA Model Summary"),
+            dbc.CardBody([
+                "No model summary available for this language."
+            ])
+        ])
 
 
 ############################################### sentiment ############################
