@@ -31,7 +31,6 @@ import os
 # ,external_stylesheets=[dbc.themes.CERULEAN]
 
 app = dash.Dash(__name__, suppress_callback_exceptions=True)
-# app = dash.Dash(__name__, )
 server = app.server
 # Initialize the cache
 cache = Cache(app.server, config={
