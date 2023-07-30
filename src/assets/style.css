@@ -11,6 +11,7 @@
     width: 80%;
     margin: auto;
     overflow: hidden;
+    font-family: Arial, sans-serif;
 }
 
 header {
@@ -19,6 +20,7 @@ header {
     padding-top: 30px;
     min-height: 70px;
     border-bottom: #e8491d 3px solid;
+    font-family: Arial, sans-serif;
 }
 
 header a {
@@ -26,12 +28,14 @@ header a {
     text-decoration: none;
     text-transform: uppercase;
     font-size: 16px;
+    font-family: Arial, sans-serif;
 }
 
 header li {
     float: left;
     display: inline;
     padding: 0 20px 0 20px;
+    font-family: Arial, sans-serif;
 }
 
 header #branding {
@@ -60,10 +64,12 @@ body {
     background-image: url("image/backgroud6A.jpg");
     background-size: cover;
     background-position: center;
+    font-family: Arial, sans-serif;
   }
   .page-container {
     display: flex;
     justify-content: center;
+    font-family: Arial, sans-serif;
 
 }
 
@@ -72,6 +78,7 @@ body {
     margin: 0 20px;
     height:500;
     width :500;
+    font-family: Arial, sans-serif;
 }
 .site-container {
     display: flex;
@@ -82,6 +89,7 @@ body {
     padding: 20px;
     height:500;
     width :500;
+    font-family: Arial, sans-serif;
     
 }
 Style the nested tabs as a side navigation bar
@@ -90,6 +98,8 @@ Style the nested tabs as a side navigation bar
     padding-top: 60px;
     background-color: #111;
     overflow-x: hidden;
+    font-family: Arial, sans-serif;
+    
 }
 
 #nested-tabs .tab {
@@ -98,15 +108,18 @@ Style the nested tabs as a side navigation bar
     font-size: 25px;
     color: #818181;
     display: block;
+    font-family: Arial, sans-serif;
 }
 
 #nested-tabs .tab:hover {
     color: #0e0202;
+    font-family: Arial, sans-serif;
 }
 
 /* Style the nested tabs content */
 #nested-tabs-content {
     padding: 20px;
+    font-family: Arial, sans-serif;
 }
 
 /* Style the container holding the tabs and content */
@@ -114,25 +127,56 @@ Style the nested tabs as a side navigation bar
     display: flex;
     flex-direction: row;
     background-color: gainsboro;
+    font-family: Arial, sans-serif;
 }
 
 .table-container {
     max-width: 1200px;
     margin: 0 20px;
-    /* background-color: #0f77ff; */
+    font-family: Arial, sans-serif;
 }
 h3{
     color: black;
+    font-family: Arial, sans-serif;
 }
 h2{
     color: black;
+    font-family: Arial, sans-serif;
 }
 h1{
     color: black;
+    font-family: Arial, sans-serif;
 }
 p{
     color: black;
+    font-family: Arial, sans-serif;
 }
 .table-container .dash-spreadsheet-container {
     background-color: transparent;
+}
+
+@media only screen and (max-width: 600px) {
+
+    .container {
+        width: 100%;
+    }
+
+    header li {
+        float: none;
+        padding: 10px 0;
+        text-align: center;
+    }
+
+    .content-container,
+    .site-container,
+    .table-container {
+        max-width: 100%;
+        margin: 0;
+        width: 100%;
+        height: auto;
+    }
+
+    #nested-tabs {
+        width: 100%;
+    }
 }
