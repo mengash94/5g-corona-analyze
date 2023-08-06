@@ -16,7 +16,7 @@ from flask_caching import Cache
 from pages.DescriptiveStatistics import DescriptiveStatistics
 from pages.CrossCorrelation import CrossCorrelation
 from pages.AutoCorrelation import AutoCorrelation
-from pages.SentimentAnalysis import avg_sentiment_scores
+# from pages.SentimentAnalysis import avg_sentiment_scores
 from dash_dangerously_set_inner_html import DangerouslySetInnerHTML
 from pages.ARIMA import ARIMA
 from pages.BERT import BERT
@@ -27,6 +27,7 @@ from pages.SentimentAnalysis import layout
 import dash_bootstrap_components as dbc
 import pickle
 import os
+from dash.dependencies import Input, Output
 
 # ,external_stylesheets=[dbc.themes.CERULEAN]
 
@@ -37,7 +38,7 @@ cache = Cache(app.server, config={
     'CACHE_TYPE': 'filesystem',
     'CACHE_DIR': 'cache-directory'
 })
-# cache.clear()
+cache.clear()
 ########################      AutoCorrelation  ###############
 
 pivot_df = pd.read_csv('pivot_df.csv')
@@ -71,7 +72,7 @@ def render_content(pathname):
                     dcc.Tab(label='Cross Correlation', value='nested-tab-2'),
                     dcc.Tab(label='Auto Correlation', value='nested-tab-3'),
                     dcc.Tab(label='Sentiment Analysis', value='nested-tab-4'),
-                    dcc.Tab(label='ARIMA', value='nested-tab-5'),
+                    dcc.Tab(label='Auto ARIMA', value='nested-tab-5'),
                     dcc.Tab(label='BERT', value='nested-tab-6'),
                 ]),
             html.Div(id='nested-tabs-content')
@@ -127,181 +128,124 @@ def update_graph(selected_language):
     return figure
 
 #################################### ARIMA #################################
-# def fit_auto_arima(series, forecast_periods=10):
-#     try:
-#         model = pm.auto_arima(series, suppress_warnings=True, seasonal=False, stepwise=True)
-#         forecast, conf_int = model.predict(n_periods=forecast_periods, return_conf_int=True)
-#         return model, forecast, conf_int
-#     except Exception as e:
-#         print(f"Failed to fit model: {e}")
-#         return None, None, None
+
 
 # @app.callback(
 #     Output('arima-graph', 'figure'),
-#     [Input('arima-language-dropdown', 'value')]  # changed id
+#     [Input('arima-language-dropdown', 'value')]
 # )
-
 # def update_arima_graph(selected_lang_arima):
+#     # Load the precomputed model and results
+#     if os.path.exists(f'{selected_lang_arima}_model.pkl'):
+#         with open(f'{selected_lang_arima}_model.pkl', 'rb') as f:
+#             model, forecast, conf_int, test_index, test = pickle.load(f)
 
-#     lang_data = tweets_per_day_by_lang[tweets_per_day_by_lang['lang'] == selected_lang_arima]
-#     lang_data.set_index('created_at', inplace=True)
-#     lang_series = lang_data['id']
-
-
-#     # We'll use 80% of our data for training, 20% for testing
-#     split_point = int(len(lang_series) * 0.8)
-#     train, test = lang_series[:split_point], lang_series[split_point:]
-
-#     model, _, _ = fit_auto_arima(train, forecast_periods=len(test))
-
-#     # Generate predictions for the dates in the test set
-#     forecast = model.predict(n_periods=len(test))
-#     # Create the plotly figure
-#     fig = go.Figure()
-#     fig.add_trace(go.Scatter(x=test.index, y=test, mode='lines', name='Actual'))
-#     fig.add_trace(go.Scatter(x=test.index, y=forecast, mode='lines', name='Predicted'))
-#     fig.update_layout(title=f"ARIMA Model Forecast vs Actuals for Language: {selected_lang_arima}",
-#                     xaxis_title='Date',
-#                     yaxis_title='Tweet Count',
-#                     )
-#     fig.update_layout(
-#         autosize=False,
-#         width=700,
-#         height=300
-#     )
-
-
-#     return fig
+#         # Create the plotly figure
+#         fig = go.Figure()
+#         fig.add_trace(go.Scatter(x=test_index, y=test, mode='lines', name='Actual'))
+#         fig.add_trace(go.Scatter(x=test_index, y=forecast, mode='lines', name='Predicted'))
+#         fig.update_layout(title=f"ARIMA Model Forecast vs Actuals for Language: {selected_lang_arima}",
+#                         xaxis_title='Date',
+#                         yaxis_title='Tweet Count',
+#                         )
+#         fig.update_layout(
+#             autosize=False,
+#             width=700,
+#             height=300
+#         )
+#         return fig
+#     else:
+#         return go.Figure()
 
 # @app.callback(
 #     Output('arima-summary-card', 'children'),
 #     [Input('arima-language-dropdown', 'value')]
 # )
-
 # def update_arima_summary(selected_lang_arima):
-#     lang_data = tweets_per_day_by_lang[tweets_per_day_by_lang['lang'] == selected_lang_arima]
-#     lang_data.set_index('created_at', inplace=True)
-#     lang_series = lang_data['id']
+#     # Load the precomputed model and results
+#     if os.path.exists(f'{selected_lang_arima}_model.pkl'):
+#         with open(f'{selected_lang_arima}_model.pkl', 'rb') as f:
+#             model, forecast, conf_int, test_index, test = pickle.load(f)
 
-#     # We'll use 80% of our data for training, 20% for testing
-#     split_point = int(len(lang_series) * 0.8)
-#     train, test = lang_series[:split_point], lang_series[split_point:]
+#         summary = str(model.summary())
 
-#     model, _, _ = fit_auto_arima(train, forecast_periods=len(test))
+#         # Replace newlines with line breaks for HTML
+#         summary_html = summary.replace('\n', '<br>')
 
-#     # Generate predictions for the dates in the test set
-#     forecast = model.predict(n_periods=len(test))
-    
-
-    
-#     summary = str(model.summary())
-
-#     # Replace newlines with line breaks for HTML
-#     summary_html = summary.replace('\n', '<br>')
-
-#     # Wrap the summary in a preformatted text tag to preserve spaces
-#     summary_html = f'<pre style="white-space: pre-wrap;">{summary_html}</pre>'
-#     card = dbc.Card([
-#         dbc.CardHeader("ARIMA Model Summary"),
-#         dbc.CardBody([
-#             DangerouslySetInnerHTML(summary_html)
+#         # Wrap the summary in a preformatted text tag to preserve spaces
+#         summary_html = f'<pre style="white-space: pre-wrap;">{summary_html}</pre>'
+#         card = dbc.Card([
+#             dbc.CardHeader("ARIMA Model Summary"),
+#             dbc.CardBody([
+#                 DangerouslySetInnerHTML(summary_html)
+#             ])
 #         ])
-#     ])
-#     return card
+#         return card
+#     else:
+#         return dbc.Card([
+#             dbc.CardHeader("ARIMA Model Summary"),
+#             dbc.CardBody([
+#                 "No model summary available for this language."
+#             ])
+#         ])
 
+# Callback to update the plot and forecast values based on selected language
 @app.callback(
-    Output('arima-graph', 'figure'),
-    [Input('arima-language-dropdown', 'value')]
+    [Output('forecast-plot', 'figure'),
+     Output('forecast-values', 'children')],
+    [Input('language-dropdown', 'value')]
 )
-def update_arima_graph(selected_lang_arima):
-    # Load the precomputed model and results
-    if os.path.exists(f'{selected_lang_arima}_model.pkl'):
-        with open(f'{selected_lang_arima}_model.pkl', 'rb') as f:
-            model, forecast, conf_int, test_index, test = pickle.load(f)
+def update_plot(selected_language):
+    # Load precomputed data for the selected language
+    data_path = f'autoarima/{selected_language}.pkl'
+    with open(data_path, 'rb') as file:
+        train, test, future_forecast, forecast_index, rmse = pickle.load(file)
 
-        # Create the plotly figure
-        fig = go.Figure()
-        fig.add_trace(go.Scatter(x=test_index, y=test, mode='lines', name='Actual'))
-        fig.add_trace(go.Scatter(x=test_index, y=forecast, mode='lines', name='Predicted'))
-        fig.update_layout(title=f"ARIMA Model Forecast vs Actuals for Language: {selected_lang_arima}",
-                        xaxis_title='Date',
-                        yaxis_title='Tweet Count',
-                        )
-        fig.update_layout(
-            autosize=False,
-            width=700,
-            height=300
-        )
-        return fig
-    else:
-        return go.Figure()
+    # Create the plot using Plotly
+    fig = {
+        'data': [
+            {'x': train.index, 'y': train, 'type': 'line', 'name': 'Train'},
+            {'x': test.index, 'y': test, 'type': 'line', 'name': 'Test'},
+            {'x': forecast_index, 'y': future_forecast, 'type': 'line', 'name': 'Forecast'}
+        ]
+    }
 
-@app.callback(
-    Output('arima-summary-card', 'children'),
-    [Input('arima-language-dropdown', 'value')]
-)
-def update_arima_summary(selected_lang_arima):
-    # Load the precomputed model and results
-    if os.path.exists(f'{selected_lang_arima}_model.pkl'):
-        with open(f'{selected_lang_arima}_model.pkl', 'rb') as f:
-            model, forecast, conf_int, test_index, test = pickle.load(f)
+    # Format the forecast values for display
+    forecast_values_text = f"Forecast for the next {len(forecast_index)} days for language {selected_language}: {', '.join(map(str, future_forecast))}"
 
-        summary = str(model.summary())
-
-        # Replace newlines with line breaks for HTML
-        summary_html = summary.replace('\n', '<br>')
-
-        # Wrap the summary in a preformatted text tag to preserve spaces
-        summary_html = f'<pre style="white-space: pre-wrap;">{summary_html}</pre>'
-        card = dbc.Card([
-            dbc.CardHeader("ARIMA Model Summary"),
-            dbc.CardBody([
-                DangerouslySetInnerHTML(summary_html)
-            ])
-        ])
-        return card
-    else:
-        return dbc.Card([
-            dbc.CardHeader("ARIMA Model Summary"),
-            dbc.CardBody([
-                "No model summary available for this language."
-            ])
-        ])
-
+    return fig, forecast_values_text
 
 ############################################### sentiment ############################
+
+# Load the daily sentiment averages from the CSV file
+daily_sentiment_avg = pd.read_csv('daily_sentiment_avg.csv')
+
+# Convert the 'date' column to datetime format
+daily_sentiment_avg['date'] = pd.to_datetime(daily_sentiment_avg['date'])
+
 @app.callback(
-    Output('sentiment-pie-chart', 'figure'),
+    Output('sentiment-line-chart', 'figure'),
     Input('language-dropdown', 'value')
 )
-def update_pie_chart(selected_lang):
-    # Load the data
-    sentiment_counts = pd.read_csv('sentiment_counts.csv')
-
+def update_line_chart(selected_lang):
     if selected_lang == 'all':
-        # Perform operation for all languages
-        filtered_df = sentiment_counts
+        # Use data for all languages
+        filtered_df = daily_sentiment_avg
     else:
         # Filter data for the selected language
-        filtered_df = sentiment_counts[sentiment_counts['lang'] == selected_lang]
+        filtered_df = daily_sentiment_avg[daily_sentiment_avg['lang'] == selected_lang]
 
-    # Create a pie chart
-    fig2 = px.pie(filtered_df, names='sentiment', values='count')
+    # Create a line chart
+    fig = px.line(filtered_df, x='date', y='average_sentiment_polarity', color='lang',
+                  title=f'Daily Average Sentiment Polarity for {selected_lang}',
+                  labels={'average_sentiment_polarity': 'Sentiment Polarity'})
 
-    # Update layout of the figure
-    fig2.update_layout(
-        title_text=f'Sentiment Distribution for {selected_lang}',
-        autosize=False,
-        width=700,
-        height=960
-    )
-
-    return fig2
+    return fig
 
 
+########################################################################## name
 
 AutoCorrelation(pivot_df)
-########################################################################## name
 if __name__ == '__main__':
     app.run_server(debug=True)
     

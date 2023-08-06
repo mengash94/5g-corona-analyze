@@ -1,7 +1,47 @@
-from dash import html
+from dash import html,dcc
+import plotly.express as px 
+import pandas as pd
+text_bert_intro = "In our analysis of Twitter data, we employed advanced techniques to classify tweets and understand their underlying sentiment. Here's an overview of the methods we used:"
+
+bert_methods = [
+    ("1. CT-BERT Model for Twitter Tweets:", " Utilizing the specialized CT-BERT model, we accurately classified tweets by understanding their unique language structure."),
+    ("2. SBERT Model for Sentence Embedding:", " We used SBERT to translate sentences into numerical forms, enabling efficient analysis of sentence meanings."),
+    ("3. 5-Fold Validation:", " To evaluate our models' performance, we employed a 5-fold validation method, ensuring a balanced and comprehensive assessment."),
+    ("4. Training and Test Data Division:", " Our approach included a careful division of data into training and test examples, allowing robust and real-world applicable results.")
+]
+
+text_bert_conclusion = "These sophisticated techniques allowed us to delve into Twitter data with precision, offering valuable insights into public sentiment and information spread during critical times."
+############count predict ##################
+# Calculate the counts for each classification
+time_series_data_pivot = pd.read_csv('time_series_data.csv')
+classification_counts = time_series_data_pivot[['Neutral', 'Opponents', 'Supporters']].sum().reset_index()
+classification_counts.columns = ['Classification', 'Count']
+
+# Create the bar plot
+bar_fig = px.bar(classification_counts, x='Classification', y='Count', title='Counts of Predicted Classifications')
+
+# Define custom colors
+colors = ['blue', 'red', 'green']
+
+# Update the traces with custom colors
+bar_fig.update_traces(marker=dict(color=colors))
+############ time seires graph #################
+
+# Load only necessary columns
+data = pd.read_csv("time_series_data_pivot_classification.csv", low_memory=False)
+
+fig = px.line(data, x='created_at', y=['Neutral', 'Opponents', 'Supporters'], title='Tweets Over Time by Classification')
 
 def BERT():
     return html.Div([
-        html.H3('Bert'),
-        html.P('This is the Bert page.'),
-    ])
+        html.H3('Using CT-BERT and SBERT for Twitter Data Analysis'),
+        html.P(text_bert_intro),
+        html.Div([html.P([html.Strong(html.U(headline)), desc]) for (headline, desc) in bert_methods]),
+        html.H3('Conclusion:'),
+        html.P(text_bert_conclusion),
+        html.Img(src='/assets/image/ct-bert-validation.jpg', width='800px', height='400px'),
+        html.H1("The result of model:"),
+        dcc.Graph(figure=bar_fig),
+        dcc.Graph(figure=fig),
+        # html.H3('Time Series Analysis'),
+    ], style={'backgroundColor': 'white', 'color': 'black', 'padding': '15px'})

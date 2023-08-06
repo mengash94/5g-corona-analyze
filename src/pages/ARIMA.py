@@ -5,6 +5,30 @@ import pandas as pd
 import plotly.graph_objects as go
 import dash_bootstrap_components as dbc
 from dash_dangerously_set_inner_html import DangerouslySetInnerHTML
+import plotly.express as px 
+
+lang_mapping = {
+    'en': 'English',
+    'fr': 'French',
+    'pt': 'Portuguese',
+    'it': 'Italian',
+    'nl': 'Dutch',
+    'de': 'German',
+    'pl': 'Polish',
+    'fi': 'Finnish',
+    'cs': 'Czech',
+    'el': 'Greek',
+    'lt': 'Lithuanian',
+    'da': 'Danish',
+    'ro': 'Romanian',
+    'sl': 'Slovenian',
+    'bg': 'Bulgarian',
+    'iw': 'Hebrew',
+    'lv': 'Latvian',
+    'et': 'Estonian',
+    'es': 'Spanish',
+    'hu': 'Hungarian'
+}
 
 # Define the text for the section
 text1 = "ARIMA, which stands for AutoRegressive Integrated Moving Average, is a forecasting technique used to analyze and predict future trends in time series data."
@@ -13,6 +37,33 @@ text3 = "<u><b>Autoregressive (AR) Part:</b></u> This examines the relationship 
 text4 = "<u><b>Integrated (I) Part:</b></u> This uses differencing to make the time series stationary—meaning that its properties don't change over time."
 text5 = "<u><b>Moving Average (MA) Part:</b></u> This involves modeling the error term as a combination of previous error terms."
 text6 = "By understanding these patterns and relationships in our data, ARIMA helps us forecast what the tweet volumes might look like in the future."
+
+# def ARIMA(languages):
+#     return html.Div([
+#         html.H3("ARIMA", style={'textAlign': 'left'}),
+#         DangerouslySetInnerHTML(f'<p style="margin-right: 10px">{text1}</p>'),
+#         DangerouslySetInnerHTML(f'<p style="margin-right: 10px">{text2}</p>'),
+#         DangerouslySetInnerHTML(f'<p style="margin-right: 10px">{text3}</p>'),
+#         DangerouslySetInnerHTML(f'<p style="margin-right: 10px">{text4}</p>'),
+#         DangerouslySetInnerHTML(f'<p style="margin-right: 10px">{text5}</p>'),
+#         DangerouslySetInnerHTML(f'<p style="margin-right: 10px">{text6}</p>'),
+#         dcc.Dropdown(
+#             id='arima-language-dropdown',  # changed id
+#             options=[{'label': i, 'value': i} for i in languages],
+#             value='Hebrew'
+#         ),
+#         dcc.Loading(
+#             id="loading",
+#             type="cube",
+#             children=[
+#                 dcc.Graph(id='arima-graph'),
+#                 html.Br(),
+#                 dbc.Card(id='arima-summary-card')
+#             ],
+#             style={'height': '300px', 'width': '500px'},
+#         )
+#     ])
+
 
 def ARIMA(languages):
     return html.Div([
@@ -24,18 +75,17 @@ def ARIMA(languages):
         DangerouslySetInnerHTML(f'<p style="margin-right: 10px">{text5}</p>'),
         DangerouslySetInnerHTML(f'<p style="margin-right: 10px">{text6}</p>'),
         dcc.Dropdown(
-            id='arima-language-dropdown',  # changed id
-            options=[{'label': i, 'value': i} for i in languages],
-            value='Hebrew'
-        ),
+            id='language-dropdown',
+            options=[{'label': lang, 'value': lang} for lang in languages],
+            value=languages[0]  # Default value
+                ),
+
         dcc.Loading(
             id="loading",
             type="cube",
             children=[
-                dcc.Graph(id='arima-graph'),
-                html.Br(),
-                dbc.Card(id='arima-summary-card'),  # use this instead of html.Div
-                dbc.Card(id='arima-summary-card')
+                dcc.Graph(id='forecast-plot'),
+                html.Div(id='forecast-values')
             ],
             style={'height': '300px', 'width': '500px'},
         )
