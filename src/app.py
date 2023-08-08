@@ -129,67 +129,6 @@ def update_graph(selected_language):
 
 #################################### ARIMA #################################
 
-
-# @app.callback(
-#     Output('arima-graph', 'figure'),
-#     [Input('arima-language-dropdown', 'value')]
-# )
-# def update_arima_graph(selected_lang_arima):
-#     # Load the precomputed model and results
-#     if os.path.exists(f'{selected_lang_arima}_model.pkl'):
-#         with open(f'{selected_lang_arima}_model.pkl', 'rb') as f:
-#             model, forecast, conf_int, test_index, test = pickle.load(f)
-
-#         # Create the plotly figure
-#         fig = go.Figure()
-#         fig.add_trace(go.Scatter(x=test_index, y=test, mode='lines', name='Actual'))
-#         fig.add_trace(go.Scatter(x=test_index, y=forecast, mode='lines', name='Predicted'))
-#         fig.update_layout(title=f"ARIMA Model Forecast vs Actuals for Language: {selected_lang_arima}",
-#                         xaxis_title='Date',
-#                         yaxis_title='Tweet Count',
-#                         )
-#         fig.update_layout(
-#             autosize=False,
-#             width=700,
-#             height=300
-#         )
-#         return fig
-#     else:
-#         return go.Figure()
-
-# @app.callback(
-#     Output('arima-summary-card', 'children'),
-#     [Input('arima-language-dropdown', 'value')]
-# )
-# def update_arima_summary(selected_lang_arima):
-#     # Load the precomputed model and results
-#     if os.path.exists(f'{selected_lang_arima}_model.pkl'):
-#         with open(f'{selected_lang_arima}_model.pkl', 'rb') as f:
-#             model, forecast, conf_int, test_index, test = pickle.load(f)
-
-#         summary = str(model.summary())
-
-#         # Replace newlines with line breaks for HTML
-#         summary_html = summary.replace('\n', '<br>')
-
-#         # Wrap the summary in a preformatted text tag to preserve spaces
-#         summary_html = f'<pre style="white-space: pre-wrap;">{summary_html}</pre>'
-#         card = dbc.Card([
-#             dbc.CardHeader("ARIMA Model Summary"),
-#             dbc.CardBody([
-#                 DangerouslySetInnerHTML(summary_html)
-#             ])
-#         ])
-#         return card
-#     else:
-#         return dbc.Card([
-#             dbc.CardHeader("ARIMA Model Summary"),
-#             dbc.CardBody([
-#                 "No model summary available for this language."
-#             ])
-#         ])
-
-# Callback to update the plot and forecast values based on selected language
 @app.callback(
     [Output('forecast-plot', 'figure'),
      Output('forecast-values', 'children')],

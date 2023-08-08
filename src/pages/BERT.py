@@ -31,6 +31,19 @@ bar_fig.update_traces(marker=dict(color=colors))
 data = pd.read_csv("time_series_data_pivot_classification.csv", low_memory=False)
 
 fig = px.line(data, x='created_at', y=['Neutral', 'Opponents', 'Supporters'], title='Tweets Over Time by Classification')
+################################bar url ######################
+df_URLs = pd.read_csv("With and Without URLs.csv")
+
+fig_barurl = px.bar(df_URLs, x='predicted_classification', y='counts', color='has_url', title='Predicted Classifications: With and Without URLs')
+
+
+###############################################
+resampled_df=pd.read_csv('Sentiment Polarity by Predicted Classification')
+fig_resampled_df =px.line(resampled_df, x='created_at', y='sentiment_polarity', color='predicted_classification',
+              title='Daily Average Sentiment Polarity by Predicted Classification',
+              labels={'created_at': 'Date', 'sentiment_polarity': 'Sentiment Polarity'},
+              template='plotly_dark')
+
 
 def BERT():
     return html.Div([
@@ -43,5 +56,6 @@ def BERT():
         html.H1("The result of model:"),
         dcc.Graph(figure=bar_fig),
         dcc.Graph(figure=fig),
-        # html.H3('Time Series Analysis'),
+        dcc.Graph(figure=fig_barurl),
+        dcc.Graph(figure=fig_resampled_df),
     ], style={'backgroundColor': 'white', 'color': 'black', 'padding': '15px'})

@@ -24,7 +24,6 @@ def DescriptiveStatistics():
         )
     ], style={'display': 'flex', 'justify-content': 'center'})
 
-    # Create a bar chart of the tweet counts by language
     tweet_counts_fig = px.bar(tweet_counts, x='lang', y='count', title='Tweet Counts by Language')
     tweet_counts_fig.update_layout(autosize=False, width=900, height=400)
     

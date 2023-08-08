@@ -1,10 +1,6 @@
 import dash
 import dash_html_components as html
 
-
-import dash
-import dash_html_components as html
-
 text_1 = "This project aims to understand the depth and distribution of false information on Twitter during the COVID-19 crisis, with a focus on European countries and Israel. The main goal is to enhance the accuracy and reliability of information disseminated on social media during global crises and emergencies."
 
 methods = [
