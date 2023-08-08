@@ -38,7 +38,7 @@ fig_barurl = px.bar(df_URLs, x='predicted_classification', y='counts', color='ha
 
 
 ###############################################
-resampled_df=pd.read_csv('Sentiment Polarity by Predicted Classification')
+resampled_df=pd.read_csv('Sentiment Polarity by Predicted Classification.csv')
 fig_resampled_df =px.line(resampled_df, x='created_at', y='sentiment_polarity', color='predicted_classification',
               title='Daily Average Sentiment Polarity by Predicted Classification',
               labels={'created_at': 'Date', 'sentiment_polarity': 'Sentiment Polarity'},
