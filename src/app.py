@@ -38,7 +38,7 @@ cache = Cache(app.server, config={
     'CACHE_TYPE': 'filesystem',
     'CACHE_DIR': 'cache-directory'
 })
-cache.clear()
+# cache.clear()
 ########################      AutoCorrelation  ###############
 
 pivot_df = pd.read_csv('pivot_df.csv')
