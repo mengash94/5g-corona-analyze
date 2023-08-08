@@ -27,8 +27,8 @@ def DescriptiveStatistics():
     tweet_counts_fig = px.bar(tweet_counts, x='lang', y='count', title='Tweet Counts by Language')
     tweet_counts_fig.update_layout(autosize=False, width=900, height=400)
     
-    tweets_over_time['created_at'] = pd.to_datetime(tweets_over_time['created_at'])
-    tweets_over_time.set_index('created_at', inplace=True)
+    tweets_over_time['date'] = pd.to_datetime(tweets_over_time['date'])
+    tweets_over_time.set_index('date', inplace=True)
 
     tweets_over_time_fig = go.Figure()
 

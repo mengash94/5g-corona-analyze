@@ -12,22 +12,17 @@ bert_methods = [
 
 text_bert_conclusion = "These sophisticated techniques allowed us to delve into Twitter data with precision, offering valuable insights into public sentiment and information spread during critical times."
 ############count predict ##################
-# Calculate the counts for each classification
+
 time_series_data_pivot = pd.read_csv('time_series_data.csv')
 classification_counts = time_series_data_pivot[['Neutral', 'Opponents', 'Supporters']].sum().reset_index()
 classification_counts.columns = ['Classification', 'Count']
-
-# Create the bar plot
 bar_fig = px.bar(classification_counts, x='Classification', y='Count', title='Counts of Predicted Classifications')
 
-# Define custom colors
 colors = ['blue', 'red', 'green']
 
-# Update the traces with custom colors
 bar_fig.update_traces(marker=dict(color=colors))
 ############ time seires graph #################
 
-# Load only necessary columns
 data = pd.read_csv("time_series_data_pivot_classification.csv", low_memory=False)
 
 fig = px.line(data, x='created_at', y=['Neutral', 'Opponents', 'Supporters'], title='Tweets Over Time by Classification')
