@@ -158,10 +158,8 @@ def update_plot(selected_language):
 
 ############################################### sentiment ############################
 
-# Load the daily sentiment averages from the CSV file
-daily_sentiment_avg = pd.read_csv('daily_sentiment_avg.csv')
 
-# Convert the 'date' column to datetime format
+daily_sentiment_avg = pd.read_csv('daily_sentiment_avg.csv')
 daily_sentiment_avg['date'] = pd.to_datetime(daily_sentiment_avg['date'])
 
 @app.callback(

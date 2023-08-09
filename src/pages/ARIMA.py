@@ -30,7 +30,6 @@ lang_mapping = {
     'hu': 'Hungarian'
 }
 
-# Define the text for the section
 text1 = "ARIMA, which stands for AutoRegressive Integrated Moving Average, is a forecasting technique used to analyze and predict future trends in time series data."
 text2 = "In our study, we use ARIMA to predict future volumes of tweets in different languages. Here's how it works:"
 text3 = "<u><b>Autoregressive (AR) Part:</b></u> This examines the relationship between an observation and a certain number of lagged observations (i.e., previous observations)."
@@ -51,7 +50,7 @@ def ARIMA(languages):
         dcc.Dropdown(
             id='language-dropdown',
             options=[{'label': lang, 'value': lang} for lang in languages],
-            value=languages[0]  # Default value
+            value=languages[0]  
                 ),
 
         dcc.Loading(

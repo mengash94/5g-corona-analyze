@@ -13,7 +13,7 @@ tweet_counts = pd.read_csv('tweet_counts.csv')
 tweets_over_time = pd.read_csv('tweets_over_time.csv')
 tweets_over_time['date'] = pd.to_datetime(tweets_over_time['date'])
 tweets_over_time.set_index('date', inplace=True)
-# print("Columns in tweets_over_time:", tweets_over_time.columns)
+
 url_counts = pd.read_csv('url_counts.csv')
 tweet_distribution = pd.read_csv('tweet_distribution.csv')
 tweet_counts_no_en = pd.read_csv('tweet_counts_no_en.csv')
@@ -34,7 +34,6 @@ def DescriptiveStatistics():
     ], style={'display': 'flex', 'justify-content': 'center'})
 
 
-    # Loop through each unique language
     for lang in tweets_over_time['lang'].unique():
         # Filter the DataFrame for the specific language
         df_lang = tweets_over_time[tweets_over_time['lang'] == lang]
@@ -42,7 +41,6 @@ def DescriptiveStatistics():
         tweets_over_time_fig.add_trace(go.Scatter(x=df_lang.index, y=df_lang['count'], mode='lines', name=lang))
 
 
-    # Create a pie chart
     url_pie_fig = px.pie(url_counts, names=['Contains URL', 'Does not contain URL'], title='Distribution of Tweets Containing URLs')
     url_pie_fig.update_layout(autosize=False, width=900, height=300)
 

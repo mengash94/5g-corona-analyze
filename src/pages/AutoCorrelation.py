@@ -6,7 +6,7 @@ import pandas as pd
 import plotly.graph_objects as go
 import plotly.express as px
 
-# Define text for each section
+
 text_1 = '''
 Our hypothesis here is that there might be a correlation within a single language's tweet volume over time. This is what we call 'autocorrelation'. Unlike normal correlation, autocorrelation doesn't compare two different variables. Instead, it examines one variable - in our case, the tweet volume in a single language - at different points in time.
 '''
